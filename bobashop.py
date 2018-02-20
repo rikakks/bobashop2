@@ -85,25 +85,25 @@ toppings = {
     'Ice Cream': 0.50,
 }
 
-sugar_levels = {
-    0: '100%',
-    1: '80%',
-    2: '50%',
-    3: '30%',
-    4: '0%',
-}
+sugar = [
+    '100%',
+    '80%',
+    '50%',
+    '30%',
+    '0%',
+]
 
-ice_levels = {
-    0: 'Regular Ice',
-    1: 'Less Ice',
-    2: 'No Ice',
-}
+ice = [
+    'Regular Ice',
+    'Less Ice',
+    'No Ice',
+]
 
 
 class Boba:
     def name(self):
-        name = 0
-        while name == False:
+        name = ''
+        while name == '':
             name = input("Enter your name: ")
         self.name = name
 
@@ -111,7 +111,7 @@ class Boba:
         print("Here is a list of the types of tea we offer: ")
         for tea in type_of_tea:
             print(tea)
-        type_of_tea_input = 0
+        type_of_tea_input = ''
         while type_of_tea_input not in type_of_tea:
             type_of_tea_input = input("""What kind of tea would you like?
 Enter name of menu: """)
@@ -119,7 +119,7 @@ Enter name of menu: """)
         print("Here is a list of tea we offer for " + type_of_tea_input + ": ")
         for tea, price in type_of_tea_selected.items():
             print(tea, price)
-        tea_input = 0
+        tea_input = ''
         while tea_input not in type_of_tea_selected:
             tea_input = input("Which tea would you like? Enter name of tea: ")
         self.tea_input = tea_input
@@ -137,42 +137,43 @@ toppings? Enter the name of topping. Otherwise, enter 'n': """)
             if topping_input in toppings:
                 self.toppings.append(topping_input)
 
-    def sugar_levels(self):
-        print("You have the following options for the sweetness level:")
-        for number, percentage in sugar_levels.items():
-            print(number, percentage)
-        sugar_levels_selected = 5
-        while sugar_levels_selected not in range(5):
-            sugar_levels_selected = int(input("Enter a number from 0~4: "))
-        self.sugar_levels = sugar_levels[sugar_levels_selected]
+    def level(self, description, options, selection_attr):
+        print(f"You have the following options for the {description} level:")
+        for number, option in enumerate(options):
+            print(number, option)
+        selection = len(options)
+        while selection not in range(len(options)):
+            selection = int(
+                input(f"Enter a number from 0 ~ {len(options) - 1}: "))
+        setattr(self, selection_attr, options[selection])
 
-    def ice_levels(self):
-        print("You have the following options for the ice level:")
-        for number, percentage in ice_levels.items():
-            print(number, percentage)
-        ice_levels_selected = 3
-        while ice_levels_selected not in range(3):
-            ice_levels_selected = int(input("Enter a number from 0~2: "))
-        self.ice_levels = ice_levels[ice_levels_selected]
+    def sugar(self):
+        self.level('sweetness', sugar, 'sugar')
 
-    def bill(self):
+    def ice(self):
+        self.level('ice', ice, 'ice')
+
+    def cost(self):
         print("You have ordered: " + self.tea_input)
         if self.toppings != []:
             for topping in self.toppings:
                 print('with ' + topping)
-        print("Sugar Levels: " + self.sugar_levels)
-        print("Ice Levels: " + self.ice_levels)
+        print("Sugar Levels: " + self.sugar)
+        print("Ice Levels: " + self.ice)
         total = self.item_selected
         for topping in self.toppings:
             total += toppings[topping]
         print("Your total for today is: $" + ('%.2f' % total) + '.')
         print("Thank you for getting boba with us!")
 
+# All the conversation comes here before creating the Boba object
 
-boba = Boba()
-boba.name()
-boba.item_selected()
-boba.toppings()
-boba.sugar_levels()
-boba.ice_levels()
-boba.bill()
+boba = Boba(
+    customer='Joshua'
+    name='Hawaii Fruit Tea',
+    toppings=['Lychee Jelly'],
+    sugar='50%',
+    ice='50%',
+)
+
+print("Your total is", boba.cost())
